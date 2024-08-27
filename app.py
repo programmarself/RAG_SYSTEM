@@ -88,8 +88,8 @@ if st.button("Split Data"):
         if split_output:
             st.subheader(f"Output using {splitter_type}")
             for idx, part in enumerate(split_output):
-                with st.expander(f"Part {idx + 1}"):
-                    st.write(part)
+                st.write(f"**Part {idx + 1}:**")
+                st.write(part)
 
 if show_info:
     for name, details in splitter_details.items():
