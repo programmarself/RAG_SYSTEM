@@ -1,33 +1,41 @@
 import streamlit as st
+import re
 
-# Define functions for each splitter type
+# Improved functions for each splitter type
 def recursive_splitter(data):
-    # A simple example of recursive splitting, dividing by paragraphs
-    return data.split('\n\n')
+    # This example will recursively split paragraphs into sentences
+    paragraphs = data.split('\n\n')
+    sentences = [sentence for para in paragraphs for sentence in para.split('.')]
+    return [sentence.strip() + '.' for sentence in sentences if sentence.strip()]
 
 def html_splitter(data):
-    # An example splitter that splits on HTML tags
-    return data.split('<')
+    # Splits on HTML tags, keeping the tags as part of the output
+    parts = re.split(r'(<[^>]+>)', data)
+    return [part for part in parts if part.strip()]
 
 def markdown_splitter(data):
-    # A splitter that splits based on markdown headings
-    return data.split('#')
+    # Splits on Markdown headings (e.g., '# ', '## ', etc.)
+    parts = re.split(r'(^#{1,6} .*$)', data, flags=re.MULTILINE)
+    return [part.strip() for part in parts if part.strip()]
 
 def code_splitter(data):
-    # A splitter that divides by functions or classes in code (using def as a proxy here)
-    return data.split('def ')
+    # Simple splitter based on function definitions in Python code
+    parts = re.split(r'(?m)^def ', data)
+    return [f'def {part.strip()}' if idx > 0 else part.strip() for idx, part in enumerate(parts) if part.strip()]
 
 def token_splitter(data):
-    # A splitter that splits text into tokens/words
-    return data.split()
+    # Splits text into tokens/words, handling punctuation
+    tokens = re.findall(r'\b\w+\b', data)
+    return tokens
 
 def character_splitter(data):
-    # A splitter that divides the text by each character
+    # Splits the text into individual characters
     return list(data)
 
 def semantic_chunker(data):
-    # A simplistic semantic chunker that splits by sentences (periods)
-    return data.split('.')
+    # Splits based on sentences, assuming sentences end with a period
+    sentences = re.split(r'(?<=\.)\s+', data)
+    return [sentence.strip() for sentence in sentences if sentence.strip()]
 
 # Mapping splitter names to functions
 splitter_functions = {
@@ -69,12 +77,11 @@ if st.button("Split Data"):
 # Optionally, display information about each splitter
 if st.checkbox("Show information about each splitter type"):
     st.write("""
-    - **Recursive Splitter**: Recursively splits the data into smaller chunks (e.g., paragraphs).
+    - **Recursive Splitter**: Recursively splits the data into smaller chunks, like paragraphs into sentences.
     - **HTML Splitter**: Splits data based on HTML tags.
     - **Markdown Splitter**: Splits markdown content based on headings.
     - **Code Splitter**: Splits code into functions or classes.
     - **Token Splitter**: Splits data into individual tokens/words.
     - **Character Splitter**: Splits data into individual characters.
-    - **Semantic Chunker**: Splits data based on semantic meaning, usually by sentences.
+    - **Semantic Chunker**: Splits data based on semantic meaning, typically by sentences.
     """)
-
