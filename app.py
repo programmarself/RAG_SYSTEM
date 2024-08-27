@@ -66,7 +66,7 @@ splitter_details = {
 st.markdown("""
     <style>
         body {
-            background-image: url("data:image/png;base64,{base64_image}") !important;
+            background-image: url("https://example.com/your-background-image.jpg") !important;
             background-size: cover !important;
             background-position: center !important;
             background-attachment: fixed !important;
@@ -81,18 +81,6 @@ st.markdown("""
         }
     </style>
 """, unsafe_allow_html=True)
-
-# Load the background image
-import base64
-from pathlib import Path
-
-def load_image(image_file):
-    with open(image_file, "rb") as image:
-        return base64.b64encode(image.read()).decode()
-
-# Update this path if necessary
-image_path = "dp.png"
-base64_image = load_image(image_path)
 
 # Streamlit app
 st.sidebar.title("Splitter Settings")
