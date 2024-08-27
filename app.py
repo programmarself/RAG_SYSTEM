@@ -62,6 +62,26 @@ splitter_details = {
     },
 }
 
+# Add custom CSS to set background image
+st.markdown("""
+    <style>
+        .main {
+            background-image: url("https://example.com/your-background-image.jpg");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .title {
+            color: white;
+            font-size: 2em;
+            text-align: center;
+        }
+        .css-1v3fvcr.e1tzin5v3 {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+    </style>
+""", unsafe_allow_html=True)
+
 # Streamlit app
 st.sidebar.title("Splitter Settings")
 st.sidebar.subheader("Data Input")
