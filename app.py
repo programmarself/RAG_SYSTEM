@@ -1,7 +1,5 @@
 import streamlit as st
 import re
-import base64
-from pathlib import Path
 
 # Define the split functions
 def recursive_splitter(data):
@@ -64,31 +62,37 @@ splitter_details = {
     },
 }
 
-# Function to load and encode image
+# Add custom CSS to set background image
+st.markdown("""
+    <style>
+        body {
+            background-image: url("data:image/png;base64,{base64_image}") !important;
+            background-size: cover !important;
+            background-position: center !important;
+            background-attachment: fixed !important;
+        }
+        .title {
+            color: white;
+            font-size: 2em;
+            text-align: center;
+        }
+        .css-1v3fvcr.e1tzin5v3 {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+# Load the background image
+import base64
+from pathlib import Path
+
 def load_image(image_file):
     with open(image_file, "rb") as image:
         return base64.b64encode(image.read()).decode()
 
-# Encode the background image
-image_path = "dp.png"  # Update the path if necessary
+# Update this path if necessary
+image_path = "dp.png"
 base64_image = load_image(image_path)
-
-# Add custom CSS to set the background image
-st.markdown(f"""
-    <style>
-        .css-1v3fvcr.e1tzin5v3 {{
-            background-image: url(data:image/png;base64,{base64_image}) !important;
-            background-size: cover !important;
-            background-position: center !important;
-            background-attachment: fixed !important;
-        }}
-        .title {{
-            color: white;
-            font-size: 2em;
-            text-align: center;
-        }}
-    </style>
-""", unsafe_allow_html=True)
 
 # Streamlit app
 st.sidebar.title("Splitter Settings")
