@@ -1,39 +1,32 @@
 import streamlit as st
 import re
 
-# Improved functions for each splitter type
+# Define the split functions
 def recursive_splitter(data):
-    # This example will recursively split paragraphs into sentences
     paragraphs = data.split('\n\n')
     sentences = [sentence for para in paragraphs for sentence in para.split('.')]
     return [sentence.strip() + '.' for sentence in sentences if sentence.strip()]
 
 def html_splitter(data):
-    # Splits on HTML tags, keeping the tags as part of the output
     parts = re.split(r'(<[^>]+>)', data)
     return [part for part in parts if part.strip()]
 
 def markdown_splitter(data):
-    # Splits on Markdown headings (e.g., '# ', '## ', etc.)
     parts = re.split(r'(^#{1,6} .*$)', data, flags=re.MULTILINE)
     return [part.strip() for part in parts if part.strip()]
 
 def code_splitter(data):
-    # Simple splitter based on function definitions in Python code
     parts = re.split(r'(?m)^def ', data)
     return [f'def {part.strip()}' if idx > 0 else part.strip() for idx, part in enumerate(parts) if part.strip()]
 
 def token_splitter(data):
-    # Splits text into tokens/words, handling punctuation
     tokens = re.findall(r'\b\w+\b', data)
     return tokens
 
 def character_splitter(data):
-    # Splits the text into individual characters
     return list(data)
 
 def semantic_chunker(data):
-    # Splits based on sentences, assuming sentences end with a period
     sentences = re.split(r'(?<=\.)\s+', data)
     return [sentence.strip() for sentence in sentences if sentence.strip()]
 
@@ -70,39 +63,40 @@ splitter_details = {
 }
 
 # Streamlit app
-st.title("RAG Splitter System")
+st.sidebar.title("Splitter Settings")
+st.sidebar.subheader("Data Input")
+user_data = st.sidebar.text_area("Enter the data you want to split:", "This is a sample text. Enter your data here...")
 
-st.subheader(f"Developed By :Irfan Ullah Khan")
-
-# User input for data
-user_data = st.text_area("Enter the data you want to split:", "This is a sample text. Enter your data here...")
-
-# User selects the splitter type
-splitter_type = st.selectbox(
+st.sidebar.subheader("Splitter Type")
+splitter_type = st.sidebar.selectbox(
     "Choose a splitter type:",
     list(splitter_details.keys())
 )
 
-# Display the selected splitter's description
-st.subheader(f"About {splitter_type}")
-st.write(splitter_details[splitter_type]["description"])
+st.sidebar.subheader("Options")
+show_info = st.sidebar.checkbox("Show information about all splitter types")
 
-# Button to perform the splitting
+st.title("RAG Splitter System")
+st.markdown('<p class="title">Developed By: Irfan Ullah Khan</p>', unsafe_allow_html=True)
+
+# Processing
 if st.button("Split Data"):
-    # Retrieve the selected splitter function
-    splitter_function = splitter_details[splitter_type]["function"]
-    
-    # Apply the splitter function to the user input data
-    split_output = splitter_function(user_data)
-    
-    # Display the output
-    st.subheader(f"Output using {splitter_type}")
-    for idx, part in enumerate(split_output):
-        st.write(f"Part {idx + 1}:")
-        st.write(part)
+    with st.spinner('Processing data...'):
+        splitter_function = splitter_details[splitter_type]["function"]
+        split_output = splitter_function(user_data)
+        
+        if split_output:
+            st.subheader(f"Output using {splitter_type}")
+            for idx, part in enumerate(split_output):
+                with st.expander(f"Part {idx + 1}"):
+                    st.write(part)
 
-# Optionally, display information about each splitter
-if st.checkbox("Show information about all splitter types"):
+if show_info:
     for name, details in splitter_details.items():
         st.subheader(name)
         st.write(details["description"])
+
+uploaded_file = st.file_uploader("Upload a file", type=["txt", "md", "html", "py"])
+if uploaded_file is not None:
+    user_data = uploaded_file.read().decode("utf-8")
+    st.text_area("File content:", user_data, height=300)
