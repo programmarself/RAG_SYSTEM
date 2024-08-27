@@ -95,8 +95,3 @@ if show_info:
     for name, details in splitter_details.items():
         st.subheader(name)
         st.write(details["description"])
-
-uploaded_file = st.file_uploader("Upload a file", type=["txt", "md", "html", "py"])
-if uploaded_file is not None:
-    user_data = uploaded_file.read().decode("utf-8")
-    st.text_area("File content:", user_data, height=300)
