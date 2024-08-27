@@ -71,7 +71,8 @@ splitter_details = {
 
 # Streamlit app
 st.title("RAG Splitter System")
-st.subtitle('Developed By :Irfan Ullah Khan')
+
+st.subheader(f"Developed By :Irfan Ullah Khan")
 
 # User input for data
 user_data = st.text_area("Enter the data you want to split:", "This is a sample text. Enter your data here...")
