@@ -66,7 +66,7 @@ splitter_details = {
 st.markdown("""
     <style>
         .main {
-            background-image: url("https://example.com/your-background-image.jpg");
+            background-image: url("dp.png");
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
