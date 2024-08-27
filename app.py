@@ -65,11 +65,11 @@ splitter_details = {
 # Add custom CSS to set background image
 st.markdown("""
     <style>
-        .main {
-            background-image: url("dp.png");
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+        body {
+            background-image: url("F:\Streamlet Application to be build\RAG SYSTEM-dp.png") !important;
+            background-size: cover !important;
+            background-position: center !important;
+            background-attachment: fixed !important;
         }
         .title {
             color: white;
