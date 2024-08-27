@@ -1,34 +1,80 @@
 import streamlit as st
 
-# A dictionary of splitter descriptions or actions
-splitter_info = {
-    "Recursive Splitter": "A Recursive Splitter breaks down a large document into smaller chunks recursively.",
-    "HTML Splitter": "HTML Splitter is used to divide HTML documents by tags, making it easier to process web content.",
-    "Markdown Splitter": "Markdown Splitter segments markdown documents into smaller pieces for easier processing.",
-    "Code Splitter": "Code Splitter is used to divide code files into smaller logical blocks.",
-    "Token Splitter": "Token Splitter splits text into individual tokens or words for finer processing.",
-    "Character Splitter": "Character Splitter divides text into individual characters, useful for very granular tasks.",
-    "Semantic Chunker": "Semantic Chunker divides text based on semantic meaning, keeping related concepts together."
+# Define functions for each splitter type
+def recursive_splitter(data):
+    # A simple example of recursive splitting, dividing by paragraphs
+    return data.split('\n\n')
+
+def html_splitter(data):
+    # An example splitter that splits on HTML tags
+    return data.split('<')
+
+def markdown_splitter(data):
+    # A splitter that splits based on markdown headings
+    return data.split('#')
+
+def code_splitter(data):
+    # A splitter that divides by functions or classes in code (using def as a proxy here)
+    return data.split('def ')
+
+def token_splitter(data):
+    # A splitter that splits text into tokens/words
+    return data.split()
+
+def character_splitter(data):
+    # A splitter that divides the text by each character
+    return list(data)
+
+def semantic_chunker(data):
+    # A simplistic semantic chunker that splits by sentences (periods)
+    return data.split('.')
+
+# Mapping splitter names to functions
+splitter_functions = {
+    "Recursive Splitter": recursive_splitter,
+    "HTML Splitter": html_splitter,
+    "Markdown Splitter": markdown_splitter,
+    "Code Splitter": code_splitter,
+    "Token Splitter": token_splitter,
+    "Character Splitter": character_splitter,
+    "Semantic Chunker": semantic_chunker,
 }
 
 # Streamlit app
-st.title("RAG System: Dynamic Splitter Information")
+st.title("Dynamic Splitter Selector")
 
-# User input
-user_input = st.text_input("Enter a splitter name:", "Recursive Splitter")
+# User input for data
+user_data = st.text_area("Enter the data you want to split:", "This is a sample text. Enter your data here...")
 
-# Normalize user input to handle case sensitivity and extra spaces
-user_input = user_input.strip().title()
+# User selects the splitter type
+splitter_type = st.selectbox(
+    "Choose a splitter type:",
+    list(splitter_functions.keys())
+)
 
-# Retrieve and display the relevant information
-if user_input in splitter_info:
-    st.subheader(f"Information about {user_input}")
-    st.write(splitter_info[user_input])
-else:
-    st.error("Splitter type not found. Please enter a valid splitter name.")
+# Button to perform the splitting
+if st.button("Split Data"):
+    # Retrieve the selected splitter function
+    splitter_function = splitter_functions[splitter_type]
+    
+    # Apply the splitter function to the user input data
+    split_output = splitter_function(user_data)
+    
+    # Display the output
+    st.subheader(f"Output using {splitter_type}")
+    for idx, part in enumerate(split_output):
+        st.write(f"Part {idx + 1}:")
+        st.write(part)
 
-# Optionally, display the full list of available splitters
-if st.checkbox("Show all available splitters"):
-    st.write("Available Splitters:")
-    for splitter in splitter_info:
-        st.write(f"- {splitter}")
+# Optionally, display information about each splitter
+if st.checkbox("Show information about each splitter type"):
+    st.write("""
+    - **Recursive Splitter**: Recursively splits the data into smaller chunks (e.g., paragraphs).
+    - **HTML Splitter**: Splits data based on HTML tags.
+    - **Markdown Splitter**: Splits markdown content based on headings.
+    - **Code Splitter**: Splits code into functions or classes.
+    - **Token Splitter**: Splits data into individual tokens/words.
+    - **Character Splitter**: Splits data into individual characters.
+    - **Semantic Chunker**: Splits data based on semantic meaning, usually by sentences.
+    """)
+
