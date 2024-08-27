@@ -79,6 +79,10 @@ show_info = st.sidebar.checkbox("Show information about all splitter types")
 st.title("RAG Splitter System")
 st.markdown('<p class="title">Developed By: Irfan Ullah Khan</p>', unsafe_allow_html=True)
 
+# Display selected splitter description
+st.subheader(f"Selected Splitter: {splitter_type}")
+st.write(splitter_details[splitter_type]["description"])
+
 # Processing
 if st.button("Split Data"):
     with st.spinner('Processing data...'):
