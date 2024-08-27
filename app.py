@@ -37,15 +37,36 @@ def semantic_chunker(data):
     sentences = re.split(r'(?<=\.)\s+', data)
     return [sentence.strip() for sentence in sentences if sentence.strip()]
 
-# Mapping splitter names to functions
-splitter_functions = {
-    "Recursive Splitter": recursive_splitter,
-    "HTML Splitter": html_splitter,
-    "Markdown Splitter": markdown_splitter,
-    "Code Splitter": code_splitter,
-    "Token Splitter": token_splitter,
-    "Character Splitter": character_splitter,
-    "Semantic Chunker": semantic_chunker,
+# Mapping splitter names to functions and descriptions
+splitter_details = {
+    "Recursive Splitter": {
+        "function": recursive_splitter,
+        "description": "Recursively splits the data into smaller chunks, like paragraphs into sentences. Useful for processing text at different levels of granularity."
+    },
+    "HTML Splitter": {
+        "function": html_splitter,
+        "description": "Splits data based on HTML tags, making it easier to work with structured web content, such as isolating specific sections of HTML code."
+    },
+    "Markdown Splitter": {
+        "function": markdown_splitter,
+        "description": "Splits markdown content based on headings (e.g., '# ', '## '). Useful for processing documents written in Markdown format."
+    },
+    "Code Splitter": {
+        "function": code_splitter,
+        "description": "Splits programming code into logical blocks like functions or classes. Useful for code analysis and documentation."
+    },
+    "Token Splitter": {
+        "function": token_splitter,
+        "description": "Splits data into individual tokens/words, which is often the first step in natural language processing (NLP) tasks."
+    },
+    "Character Splitter": {
+        "function": character_splitter,
+        "description": "Splits text into individual characters. Useful for character-level analysis or encoding tasks."
+    },
+    "Semantic Chunker": {
+        "function": semantic_chunker,
+        "description": "Splits data based on semantic meaning, typically by sentences. Ensures that related information stays together."
+    },
 }
 
 # Streamlit app
@@ -57,13 +78,17 @@ user_data = st.text_area("Enter the data you want to split:", "This is a sample 
 # User selects the splitter type
 splitter_type = st.selectbox(
     "Choose a splitter type:",
-    list(splitter_functions.keys())
+    list(splitter_details.keys())
 )
+
+# Display the selected splitter's description
+st.subheader(f"About {splitter_type}")
+st.write(splitter_details[splitter_type]["description"])
 
 # Button to perform the splitting
 if st.button("Split Data"):
     # Retrieve the selected splitter function
-    splitter_function = splitter_functions[splitter_type]
+    splitter_function = splitter_details[splitter_type]["function"]
     
     # Apply the splitter function to the user input data
     split_output = splitter_function(user_data)
@@ -75,13 +100,7 @@ if st.button("Split Data"):
         st.write(part)
 
 # Optionally, display information about each splitter
-if st.checkbox("Show information about each splitter type"):
-    st.write("""
-    - **Recursive Splitter**: Recursively splits the data into smaller chunks, like paragraphs into sentences.
-    - **HTML Splitter**: Splits data based on HTML tags.
-    - **Markdown Splitter**: Splits markdown content based on headings.
-    - **Code Splitter**: Splits code into functions or classes.
-    - **Token Splitter**: Splits data into individual tokens/words.
-    - **Character Splitter**: Splits data into individual characters.
-    - **Semantic Chunker**: Splits data based on semantic meaning, typically by sentences.
-    """)
+if st.checkbox("Show information about all splitter types"):
+    for name, details in splitter_details.items():
+        st.subheader(name)
+        st.write(details["description"])
