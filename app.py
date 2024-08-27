@@ -65,11 +65,11 @@ splitter_details = {
 # Add custom CSS to set background image
 st.markdown("""
     <style>
-        body {
-            background-image: url("https://example.com/your-background-image.jpg") !important;
-            background-size: cover !important;
-            background-position: center !important;
-            background-attachment: fixed !important;
+        .main {
+            background-image: url("https://example.com/your-background-image.jpg");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
         }
         .title {
             color: white;
