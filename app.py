@@ -70,7 +70,8 @@ splitter_details = {
 }
 
 # Streamlit app
-st.title("Dynamic Splitter Selector")
+st.title("RAG Splitter System")
+Developed By :Irfan Ullah Khan
 
 # User input for data
 user_data = st.text_area("Enter the data you want to split:", "This is a sample text. Enter your data here...")
